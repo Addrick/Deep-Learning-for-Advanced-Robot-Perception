@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Oct 17 22:06:36 2020
-fixes stupid fucking tensorflow-gpu memory allocation
+fixes stupid tensorflow-gpu memory allocation on my machine
 @author: Adam
 """
 
