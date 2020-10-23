@@ -23,8 +23,13 @@ numpy.random.seed(seed)
 # load the dataset but only keep the top n words, zero the rest
 top_words = 5000
 test_split = 0.33
-(X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words, test_split=test_split)
-# pad dataset to a maximum review length in words
+np_load_old = numpy.load
+# modify the default parameters of np.load
+numpy.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+# call load_data with allow_pickle implicitly set to true
+(X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=10000)
+# restore np.load for future normal usage
+numpy.load = np_load_old# summarize size# pad dataset to a maximum review length in words
 max_words = 500
 X_train = sequence.pad_sequences(X_train, maxlen=max_words)
 X_test = sequence.pad_sequences(X_test, maxlen=max_words)
