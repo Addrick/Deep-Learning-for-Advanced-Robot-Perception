@@ -50,16 +50,16 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
 model.add(Dropout(0.2))
 model.add(Dense(1024, activation='relu', W_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
+model.add(Dropout(0.5))
 model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
+model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 # Compile model
 epochs = 25
 lrate = 0.01
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 print(model.summary())
 # Fit the model
 model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=epochs, batch_size=64)

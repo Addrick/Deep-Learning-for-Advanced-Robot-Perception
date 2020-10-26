@@ -38,7 +38,7 @@ def baseline_model():
     # create model
     model = Sequential()
     model.add(Dense(num_pixels, input_dim=num_pixels, kernel_initializer='normal', activation='relu'))
-    model.add(Dropout(0.05))
+    model.add(Dropout(0.1))
     model.add(Dense(784, kernel_initializer='normal', activation='relu', kernel_constraint=maxnorm(4)))
     model.add(Dropout(0.5))
     model.add(Dense(384, kernel_initializer='normal', activation='relu', kernel_constraint=maxnorm(3)))

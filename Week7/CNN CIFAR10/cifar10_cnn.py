@@ -15,6 +15,7 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
 from keras.utils import np_utils
 import tensorflow as tf
+import plot_history as p
 # allocate ~4GB of GPU memory:
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.67)
 sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
@@ -35,23 +36,30 @@ y_test = np_utils.to_categorical(y_test)
 num_classes = y_test.shape[1]
 # Create the model
 model = Sequential()
-model.add(Convolution2D(32, 3, 3, input_shape=(32, 32, 3), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
-model.add(Convolution2D(32, 3, 3, activation='relu', border_mode='same', W_constraint=maxnorm(3)))
+model.add(Convolution2D(32, 5, input_shape=(32, 32, 3), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
+model.add(Convolution2D(64, 3, activation='relu', border_mode='same', W_constraint=maxnorm(3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Flatten())
-model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
+model.add(Dropout(0.5))
+model.add(Dense(512, activation='relu', W_constraint=maxnorm(4)))
+model.add(Dropout(0.5))
+model.add(Dense(512, activation='relu', W_constraint=maxnorm(4)))
+model.add(Dropout(0.5))
+model.add(Dense(512, activation='relu', W_constraint=maxnorm(4)))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 # Compile model
-epochs = 25
-lrate = 0.01
+epochs = 50
+lrate = 0.05
 decay = lrate/epochs
-sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+sgd = SGD(lr=lrate, momentum=0.7, decay=decay, nesterov=False)
+model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 print(model.summary())
 # Fit the model
-model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=epochs, batch_size=32, verbose=2)
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=16, verbose=2)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
+
+p.plot_acc_loss(history)
+
