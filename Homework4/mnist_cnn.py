@@ -31,11 +31,16 @@ num_classes = y_test.shape[1]
 def baseline_model():
 	# create model
 	model = Sequential()
-	model.add(Convolution2D(32, 5, 5, border_mode='valid', input_shape=(28, 28, 1), activation='relu'))
+	model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(28, 28, 1), activation='relu'))
 	model.add(MaxPooling2D(pool_size=(2, 2)))
-	model.add(Dropout(0.2))
+	model.add(Convolution2D(64, 5, 5, border_mode='valid', activation='relu'))
+	model.add(MaxPooling2D(pool_size=(2, 2)))
+	model.add(Dropout(0.5))
 	model.add(Flatten())
-	model.add(Dense(128, activation='relu'))
+	model.add(Dense(2048, activation='relu'))
+	model.add(Dropout(0.5))
+	model.add(Dense(1024, activation='relu'))
+	model.add(Dropout(0.5))
 	model.add(Dense(num_classes, activation='softmax'))
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -43,7 +48,7 @@ def baseline_model():
 # build the model
 model = baseline_model()
 # Fit the model
-model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=10, batch_size=200, verbose=2)
+model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=20, batch_size=512, verbose=2)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
-print("CNN Error: %.2f%%" % (100-scores[1]*100))
+print("Baseline Error: %.2f%%" % (100-scores[1]*100))

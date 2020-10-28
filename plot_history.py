@@ -13,7 +13,7 @@ def plot_acc_loss(history):
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    # plt.show()
     # summarize history for loss
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
@@ -21,4 +21,6 @@ def plot_acc_loss(history):
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
+    axes = plt.gca()
+    axes.set_ylim([0, 1])
     plt.show()

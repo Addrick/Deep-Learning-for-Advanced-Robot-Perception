@@ -64,5 +64,5 @@ model = larger_model()
 history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=75, batch_size=128, verbose=2)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
-print("Large CNN Error: %.2f%%" % (100-max(scores)*100))
+print("Large CNN Error: %.2f%%" % (100-scores[1]*100))
 p.plot_acc_loss(history)
