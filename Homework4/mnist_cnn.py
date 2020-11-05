@@ -1,7 +1,3 @@
-# Carlos Morato, PhD.
-# cwmorato@wpi.edu
-# Deep Learning for Advanced Robot Perception
-#
 # Simple CNN for the MNIST Dataset
 import numpy
 from keras.datasets import mnist
